@@ -10,55 +10,45 @@
 	Welcome {{user}} 
 	<!-- <a href="/logout">Logout</a>-->
 	<br><a href="/travels/add">add travel plan</a>
-	<br>Your Trip Schedules:
+	<br><h2>Your Trip Schedules:</h2>
 	{%for data in my_trips%}
-		<p>	
-		<!-- {{data.trip.destination}}  -->
+		<p> 
+		<a href="/travels/destination/{{data.id}}">{{data.destination}}</a>
+		{{data.TravelDateFrom}} 
+		{{data.TravelDateTo}} 
+		{{data.description}}
+		</p>
+	{%endfor%}
+	<br>
+	<p>-----------------------</p>
+	<h2>TRIPs I JOINED</h2>
+	{%for data in trips_joined%} 
+		<p> 
 		<a href="/travels/destination/{{data.trip.id}}">{{data.trip.destination}}</a>
 		{{data.trip.TravelDateFrom}} 
 		{{data.trip.TravelDateTo}} 
 		{{data.trip.description}}
 		</p>
 	{%endfor%}
-	{%for data in trip_joined%}
-		<p>	
-		<a href="/travels/destination/{{data.trip.id}}">{{data.trip.destination}}</a>
-		<!-- {{data.trip.destination}}  -->
-		{{data.trip.TravelDateFrom}} 
-		{{data.trip.TravelDateTo}} 
-		{{data.trip.description}}
-		</p>
-	{%endfor%}
+	<!-- class Follow(models.Model): 
+    trip = models.ForeignKey(TripSchedule, related_name = 'users')
+    follower= models.ForeignKey(User, related_name = 'trips') -->
+
+
 	<br><br>
-
-<!--             'other_trips': Trip.objects.exclude(admin_id=request.session['id']) -->
-	<!-- if there is data in trip_joined, do these loops, if not, show all otherdata -->
-	{%if trip_joined|length %}
-		{%for data in other_trips%}
-			<p>	{{data.admin.name}} 
-			<a href="/travels/destination/{{data.trip.id}}">{{data.trip.destination}}</a>
-			<!-- {{data.trip.destination}}  -->
-			{{data.trip.TravelDateFrom}} 
-			{{data.trip.TravelDateTo}} 
-			{{data.trip.description}}  <a href="/jointrip/{{data.trip.id}}/{{request.session.id}}">Join</a>
-			</p>
-		{%endfor%}
+	<h2>Other User Trips:</h2>
+	{%for data in other_trips%}
+		<p> 
+		{{data.user.name}}  
+		<a href="/travels/destination/{{data.id}}">{{data.destination}}</a>
+		{{data.TravelDateFrom}} 
+		{{data.TravelDateTo}} 
+		{{data.description}}  
+		<a href="/jointrip/{{data.id}}/{{request.session.id}}">Join</a>
+		</p>
+	{%endfor%}
 
 
-
-
-	{%else%}
-	<h2>Other Users Trips when I haven't joined any Trips</h2>
-		{%for data in other_trips%}
-			<p>{{data.admin.name}} 
-				<!-- {{data.trip.destination}}  -->
-				<a href="/travels/destination/{{data.trip.id}}">{{data.trip.destination}}</a>	
-			{{data.trip.TravelDateFrom}} 
-			{{data.trip.TravelDateTo}} 
-			{{data.trip.description}}  <a href="/jointrip/{{data.trip.id}}/{{request.session.id}}">Join</a>
-			</p>
-		{%endfor%}
-	{%endif%}
 	
 
 	

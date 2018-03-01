@@ -49,17 +49,27 @@ class TripSchedule(models.Model):
     TravelDateTo = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, related_name = 'users') #added, a user can have many tripscheudles.
+    # user_id = models.IntegerField()
     # objects = TripManager()
 
-class Follow(models.Model): #addded
+
+#carried over from old code.
+# class Follow(models.Model): 
+#     trip = models.ForeignKey(TripSchedule, related_name = 'users')
+#     follower= models.ForeignKey(User, related_name = 'trips')
+
+class Follow(models.Model): 
     trip = models.ForeignKey(TripSchedule, related_name = 'users')
     follower= models.ForeignKey(User, related_name = 'trips')
 
-class Trip(models.Model): #addded
-    # admin = models.ForeignKey(TripSchedule, related_name = "trips")
-    # admin = models.OneToOneField(User, on_delete=models.CASCADE) 
-    admin = models.ForeignKey(User, related_name = 'adminrelated') 
-    trip = models.OneToOneField(TripSchedule, on_delete=models.CASCADE)
+
+# Got rid of this code since the user id is now directly associated with the trip id.
+# class Trip(models.Model): #addded
+#     # admin = models.ForeignKey(TripSchedule, related_name = "trips")
+#     # admin = models.OneToOneField(User, on_delete=models.CASCADE) 
+#     admin = models.ForeignKey(User, related_name = 'adminrelated') 
+#     trip = models.OneToOneField(TripSchedule, on_delete=models.CASCADE)
     
 
 # class TripUser(models.Model):

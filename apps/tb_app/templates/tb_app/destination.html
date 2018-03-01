@@ -14,13 +14,13 @@
     <p>Travel Date To: {{tripSchedule.TravelDateTo}}</p>
     <br><br>
     <h2>Other Users Who joined the Trip</h2>
-    <!-- {% for data in other_users %}
+    {% for data in followers %}
         <p>{{data.follower.name}}</p>
     {% endfor %}
-     -->
-     {% for data in unique_follows %}
+    
+     <!-- {% for data in unique_follows %}
         <p>{{data.follower.name}}</p>
-    {% endfor %}
+    {% endfor %} -->
  
 </body>
 </html>
