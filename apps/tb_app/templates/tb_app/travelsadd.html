@@ -17,6 +17,7 @@
         {% endfor %}
     </ul>
     {% endif %}
+    <a href="/logout">Logout</a>  <a href="/home">Home</a>
     <form action='/trip/processtrip/' method='post'>
         {% csrf_token %}
         <!-- <div id='fields'> -->

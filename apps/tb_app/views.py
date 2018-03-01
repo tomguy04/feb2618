@@ -8,6 +8,8 @@ from .models import User, TripSchedule, Follow
 import bcrypt
 from itertools import chain
 from operator import attrgetter
+from datetime import datetime
+from django.utils import timezone
 # the index function is called when root is visited
 def index(request):
     return render(request,"tb_app/registrationForm.html")
@@ -56,6 +58,8 @@ def travels(request):
         u = User.objects.get(id = request.session['id'])
         user_name = u.name
         print "user name is " + user_name
+        today_date = timezone.now().date()
+        print "today_date " + str(today_date)
 
         # t = Trip.objects.exclude(admin_id=request.session['id'])
        
@@ -104,6 +108,8 @@ def travels(request):
         }
 
         return render(request, "tb_app/dashboard.html", context) 
+    else:
+        return redirect('/main')
 
 def getatrip(request):
     return render(request, "tb_app/travelsadd.html")
@@ -115,9 +121,19 @@ def processtrip(request):
     #         messages.error(request, error, extra_tags=tag)
     #     return redirect('/travels/add')
     # else:
-    trip1 = TripSchedule(destination = request.POST['destination'], description = request.POST['description'], TravelDateFrom = request.POST['TravelDateFrom'], TravelDateTo = request.POST['TravelDateTo'], user_id = request.session['id'])
-    trip1.save()
-    return redirect ('/travels')
+  
+    errors = TripSchedule.objects.basic_validator(request.POST)
+    if len(errors):
+        for tag, error in errors.iteritems():
+            messages.error(request, error, extra_tags=tag)
+        return redirect('/travels/add')
+    else:
+        trip1 = TripSchedule(destination = request.POST['destination'], description = request.POST['description'], TravelDateFrom = request.POST['TravelDateFrom'], TravelDateTo = request.POST['TravelDateTo'], user_id = request.session['id'])
+        trip1.save()
+        print "TravelDateFrom " + trip1.TravelDateFrom
+        # print "DateTime.today" + date.today()#datetime.strftime(datetime.date, '%Y-%m-%d')
+        # datetime.strptime(my_input_time, '%Y%m%d %h:%m:%s')
+        return redirect ('/travels')
 
 def jointrip(request,tid,uid):
     trip1 = TripSchedule.objects.get(id=tid)
@@ -184,3 +200,6 @@ def destination(request,tid):
 def logout(request):
     request.session.clear()
     return redirect("/main")
+
+def home(request):
+    return redirect("/travels")

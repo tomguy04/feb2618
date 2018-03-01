@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
+import re
 
 class UserManager(models.Manager):
     def basic_validator(self, postData):
@@ -17,20 +19,41 @@ class UserManager(models.Manager):
             
         return errors
 
-# class TripManager(models.Manager):
-#     def basic_validator(self, postData):
-#         errors = {}
-#         if len(postData['destination']) < 1:
-#                 errors["destination"] = "name must be at least 1 character"
-#         if len(postData['description']) < 1:
-#             errors["description"] = "description must be at least 1 character"
-#         if len(postData['TravelDateFrom']) < 1:
-#             errors["password"] = "TravelDateFrom must be at least 1 characters"
-#         if len(postData['TravelDateTo']) < 1:
-#             errors["TravelDateTo"] = "TravelDateTo must be at least 1 characters"
-#         if postData['TravelDateFrom'] <= datetime.date.today():
-#             errors["TravelDateFrom"] = "TravelDateFrom must be in the future"    
-#         return errors
+class TripManager(models.Manager):
+    
+    def basic_validator(self, postData):
+        # DATE_REGEX = re.compile(r'^[0-9]{4,7}-[0-9]{2,2}-[0-9]{2,2}$')
+        # DATE_REGEX = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+        errors = {}
+        if len(postData['destination']) < 1:
+                errors["destination"] = "destination in blank, please add a destination"
+        if len(postData['description']) < 1:
+            errors["description"] = "description in blank, please add a description"
+        if len(postData['TravelDateFrom']) < 1:
+            errors["TravelDateFrom"] = "TravelDateFrom is blank, please add TravelDateFrom"
+        if len(postData['TravelDateTo']) < 1:
+            errors["TravelDateTo"] = "TravelDateTo is blank, please add a TravelDateTo"
+        if len(postData['TravelDateTo']) > 0 and len(postData['TravelDateFrom']) > 0:
+ 
+            # if datetime.strptime(postData['TravelDateFrom'], '%Y%m%d') <= datetime.today():
+            #     errors["TravelDateFrom"] = "TravelDateFrom must be in the future"
+            if postData['TravelDateFrom'] <= str(timezone.now().date()):
+                errors["TravelDateFrom"] = "TravelDateFrom must be in the future"
+            if postData['TravelDateTo'] <= str(timezone.now().date()):
+                errors["TravelDateTo"] = "TravelDateTo must be in the future"
+            
+            if postData['TravelDateFrom'] >= postData['TravelDateTo']:
+                errors["TravelDateFrom"] = "TravelDateFrom must be before TravelDateTo"
+            # else:
+            #     if postData['TravelDateFrom'] <= str(timezone.now().date()):
+            #         errors["TravelDateFrom"] = "TravelDateFrom must be in the future"
+            #     if postData['TravelDateTo'] <= str(timezone.now().date()):
+            #         errors["TravelDateTo"] = "TravelDateTo must be in the future"
+
+                
+
+        return errors
+        # datetime.strptime(my_input_time, '%Y%m%d %h:%m:%s')
         
 class User(models.Model):
     name = models.CharField(max_length=255)
@@ -50,6 +73,7 @@ class TripSchedule(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, related_name = 'users') #added, a user can have many tripscheudles.
+    objects = TripManager()
     # user_id = models.IntegerField()
     # objects = TripManager()
 

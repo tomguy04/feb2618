@@ -8,7 +8,7 @@
 	your registered. -->
 	
 	Welcome {{user}} 
-	<!-- <a href="/logout">Logout</a>-->
+	<a href="/logout">Logout</a>
 	<br><a href="/travels/add">add travel plan</a>
 	<br><h2>Your Trip Schedules:</h2>
 	{%for data in my_trips%}
@@ -19,9 +19,9 @@
 		{{data.description}}
 		</p>
 	{%endfor%}
-	<br>
-	<p>-----------------------</p>
-	<h2>TRIPs I JOINED</h2>
+
+
+		<!-- trips the user joined -->
 	{%for data in trips_joined%} 
 		<p> 
 		<a href="/travels/destination/{{data.trip.id}}">{{data.trip.destination}}</a>
